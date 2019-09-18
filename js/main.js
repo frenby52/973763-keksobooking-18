@@ -51,26 +51,31 @@ var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 var dataAds = generateData(GENERATE_QUANTITY);
 
-var createElements = function (quantity, templateId, contentElement, data) {
+var addPinAtrributes = function (data, templateId, contentElement, element) {
+  element.style = 'left: ' + data.location.x + 'px; top: ' + data.location.y + 'px;';
+  element.querySelector('img').src = data.author.avatar;
+};
+
+var createElements = function (quantity, templateId, contentElement, data, addAttr) {
   var template = document.querySelector(templateId).content.querySelector(contentElement);
   var documentFragment = document.createDocumentFragment();
 
   for (var i = 0; i < quantity; i++) {
     var element = template.cloneNode(true);
-    element.style = 'left: ' + data[i].location.x + 'px; top: ' + data[i].location.y + 'px;';
-    element.querySelector('img').src = data[i].author.avatar;
-    // pinElement.querySelector('img').alt = dataAds[i].offer.title;
+    if (addAttr) {
+      addAttr(data[i], templateId, contentElement, element);
+    }
     documentFragment.appendChild(element);
   }
 
   return documentFragment;
 };
 
-var fillElements = function (quantity, templateId, contentElement, destinationElement, data) {
-  var documentFragment = createElements(quantity, templateId, contentElement, data);
+var fillElements = function (quantity, templateId, contentElement, destinationElement, data, addAttributes) {
+  var documentFragment = createElements(quantity, templateId, contentElement, data, addAttributes);
   destinationElement = document.querySelector(destinationElement);
   destinationElement.appendChild(documentFragment);
 };
 
-fillElements(GENERATE_QUANTITY, '#pin', '.map__pin', '.map__pins', dataAds);
+fillElements(GENERATE_QUANTITY, '#pin', '.map__pin', '.map__pins', dataAds, addPinAtrributes);
 
