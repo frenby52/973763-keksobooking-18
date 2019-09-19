@@ -1,12 +1,14 @@
 'use strict';
 
-var GENERATE_QUANTITY = 8;
-// временно задал 500
-var BLOCK_SIZE = 500;
-// var PIN_MIN_X;
-// var PIN_MAX_X;
+var ELEMENTS_QUANTITY = 8;
+var PIN_MIN_X = 0;
+var PIN_MAX_X = 1200;
 var PIN_MIN_Y = 130;
 var PIN_MAX_Y = 630;
+var PIN_GAP_X = 25;
+var PIN_GAP_Y = 35;
+var pinTemplateId = document.querySelector('#pin');
+var mapPins = document.querySelector('.map__pins');
 
 function randomInteger(min, max) {
   var rand = min + Math.random() * (max + 1 - min);
@@ -29,7 +31,7 @@ var createAdInfo = function (avatar) {
       avatar: avatar
     },
     location: {
-      x: randomInteger(0, BLOCK_SIZE),
+      x: randomInteger(PIN_MIN_X, PIN_MAX_X),
       y: randomInteger(PIN_MIN_Y, PIN_MAX_Y)
     }
   };
@@ -47,35 +49,43 @@ var generateData = function (quantity) {
   return dataAds;
 };
 
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
-var dataAds = generateData(GENERATE_QUANTITY);
+var activateMap = function () {
+  var map = document.querySelector('.map');
+  map.classList.remove('map--faded');
+};
 
-var addPinAtrributes = function (data, templateId, contentElement, element) {
-  element.style = 'left: ' + data.location.x + 'px; top: ' + data.location.y + 'px;';
+activateMap();
+
+var dataAds = generateData(ELEMENTS_QUANTITY);
+
+var addPinAttributes = function (data, element) {
+  element.style = 'left: ' + (data.location.x - PIN_GAP_X) + 'px; top: ' + (data.location.y - PIN_GAP_Y) + 'px;';
   element.querySelector('img').src = data.author.avatar;
 };
 
-var createElements = function (quantity, templateId, contentElement, data, addAttr) {
-  var template = document.querySelector(templateId).content.querySelector(contentElement);
-  var documentFragment = document.createDocumentFragment();
+var createPin = function () {
+  var template = pinTemplateId.content.querySelector('.map__pin');
+  var element = template.cloneNode(true);
 
-  for (var i = 0; i < quantity; i++) {
-    var element = template.cloneNode(true);
-    if (addAttr) {
-      addAttr(data[i], templateId, contentElement, element);
-    }
+  return element;
+};
+
+var createPinElements = function (data) {
+  var documentFragment = document.createDocumentFragment();
+  for (var i = 0; i < data.length; i++) {
+    var element = createPin();
+    addPinAttributes(data[i], element);
     documentFragment.appendChild(element);
   }
 
   return documentFragment;
 };
 
-var fillElements = function (quantity, templateId, contentElement, destinationElement, data, addAttributes) {
-  var documentFragment = createElements(quantity, templateId, contentElement, data, addAttributes);
-  destinationElement = document.querySelector(destinationElement);
-  destinationElement.appendChild(documentFragment);
+var addPinElements = function (data) {
+  var documentFragment = createPinElements(data);
+  mapPins.appendChild(documentFragment);
 };
 
-fillElements(GENERATE_QUANTITY, '#pin', '.map__pin', '.map__pins', dataAds, addPinAtrributes);
+addPinElements(dataAds);
+
 
