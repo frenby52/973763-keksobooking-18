@@ -209,13 +209,16 @@ var documentSelects = document.querySelectorAll('select');
 var addressInput = adForm.querySelector('#address');
 var roomNumber = adForm.querySelector('#room_number');
 var capacity = adForm.querySelector('#capacity');
-var pinCoordYShift = MAIN_PIN_HEIGHT / 2;
 
 var roomsToGuests = {
   '1': ['1'],
   '2': ['2', '1'],
   '3': ['3', '2', '1'],
   '100': ['0']
+};
+
+var isMapActive = function () {
+  return map.classList.contains('map--faded');
 };
 
 var setDisabledStatusInputs = function (inputs, isDisabled) {
@@ -227,14 +230,13 @@ var setDisabledStatusInputs = function (inputs, isDisabled) {
 var getPinCoords = function () {
   var pinCoords = {};
   pinCoords.x = Math.round(parseInt(mapPinMain.style.left, 10) + MAIN_PIN_WIDTH / 2);
-  pinCoords.y = Math.round(parseInt(mapPinMain.style.top, 10) + pinCoordYShift);
+  pinCoords.y = isMapActive() ? Math.round(parseInt(mapPinMain.style.top, 10) + MAIN_PIN_HEIGHT / 2) : Math.round(parseInt(mapPinMain.style.top, 10) + MAIN_PIN_HEIGHT + MAIN_PIN_TAIL_HEIGHT);
 
   return pinCoords;
 };
 
 var fillAddress = function (coords) {
   addressInput.value = coords.x + ', ' + coords.y;
-  addressInput.setAttribute('readonly', 'readonly');
 };
 
 var activateMap = function () {
@@ -243,7 +245,6 @@ var activateMap = function () {
   setDisabledStatusInputs(documentInputs, false);
   setDisabledStatusInputs(documentSelects, false);
   setDisabledStatusInputs(capacity, true);
-  pinCoordYShift = MAIN_PIN_HEIGHT + MAIN_PIN_TAIL_HEIGHT;
   fillAddress(getPinCoords());
 };
 
