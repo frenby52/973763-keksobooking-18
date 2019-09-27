@@ -94,9 +94,7 @@ var generateData = function (quantity) {
   return dataAds;
 };
 
-/* eslint-disable */
 var dataAds = generateData(ELEMENTS_QUANTITY);
-/* eslint-enable */
 
 var createPin = function (data) {
   var element = pinTemplate.cloneNode(true);
@@ -118,12 +116,10 @@ var createPinElements = function (data) {
   return documentFragment;
 };
 
-/* eslint-disable */
 var addPinElements = function (data) {
   var documentFragment = createPinElements(data);
   mapPins.appendChild(documentFragment);
 };
-/* eslint-enable */
 
 // module3-task3
 var getOfferType = function (data) {
@@ -285,8 +281,11 @@ roomNumber.addEventListener('change', updateRoomsToGuestsHandler);
 deactivateMap();
 
 // module4-task3
-// addPinElements(dataAds);
 var ESC_KEYCODE = 27;
+var price = document.querySelector('#price');
+var offerTypes = document.querySelector('#type');
+var timeIn = document.querySelector('#timein');
+var timeOut = document.querySelector('#timeout');
 
 var isPopupActive = function (popup) {
   return map.contains(popup);
@@ -346,3 +345,46 @@ var addPinHandlers = function () {
 };
 
 // addPinHandlers();
+var updateOfferTypeToPriceHandler = function (evt) {
+  var offerType = evt.target.value;
+  if (offerType === 'bungalo') {
+    price.min = 0;
+    price.placeholder = '0';
+  } else if (offerType === 'flat') {
+    price.min = 1000;
+    price.placeholder = '1000';
+  } else if (offerType === 'house') {
+    price.min = 5000;
+    price.placeholder = '5000';
+  } else if (offerType === 'palace') {
+    price.min = 10000;
+    price.placeholder = '10000';
+  }
+};
+
+var updateTimeInHandler = function (evt) {
+  var time = evt.target.value;
+  if (time === '12:00') {
+    timeIn.value = timeIn.options[0].value;
+  } else if (time === '13:00') {
+    timeIn.value = timeIn.options[1].value;
+  } else if (time === '14:00') {
+    timeIn.value = timeIn.options[2].value;
+  }
+};
+
+var updateTimeOutHandler = function (evt) {
+  var time = evt.target.value;
+  if (time === '12:00') {
+    timeOut.value = timeOut.options[0].value;
+  } else if (time === '13:00') {
+    timeOut.value = timeOut.options[1].value;
+  } else if (time === '14:00') {
+    timeOut.value = timeOut.options[2].value;
+  }
+};
+
+offerTypes.addEventListener('change', updateOfferTypeToPriceHandler);
+timeIn.addEventListener('change', updateTimeOutHandler);
+timeOut.addEventListener('change', updateTimeInHandler);
+
