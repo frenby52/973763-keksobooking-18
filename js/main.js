@@ -94,9 +94,7 @@ var generateData = function (quantity) {
   return dataAds;
 };
 
-/* eslint-disable */
 var dataAds = generateData(ELEMENTS_QUANTITY);
-/* eslint-enable */
 
 var createPin = function (data) {
   var element = pinTemplate.cloneNode(true);
@@ -104,6 +102,7 @@ var createPin = function (data) {
   element.style.top = data.location.y - PIN_GAP_Y + 'px';
   element.querySelector('img').src = data.author.avatar;
   element.querySelector('img').alt = data.offer.title;
+  addPinClickHandler(element, data);
 
   return element;
 };
@@ -118,12 +117,10 @@ var createPinElements = function (data) {
   return documentFragment;
 };
 
-/* eslint-disable */
 var addPinElements = function (data) {
   var documentFragment = createPinElements(data);
   mapPins.appendChild(documentFragment);
 };
-/* eslint-enable */
 
 // module3-task3
 var getOfferType = function (data) {
@@ -187,12 +184,10 @@ var createCard = function (data) {
   return cardElement;
 };
 
-/* eslint-disable */
-var insertCard = function (data) {
-  var cardElement = createCard(data);
-  map.insertBefore(cardElement, mapFilters);
-};
-/* eslint-enable */
+// var insertCard = function (data) {
+//   var cardElement = createCard(data);
+//   map.insertBefore(cardElement, mapFilters);
+// };
 
 // addPinElements(dataAds);
 // insertCard(dataAds[0]);
@@ -246,6 +241,7 @@ var activateMap = function () {
   setDisabledStatusInputs(documentSelects, false);
   setDisabledStatusInputs(capacity, true);
   fillAddress(getPinCoords());
+  addPinElements(dataAds);
 };
 
 var deactivateMap = function () {
@@ -283,3 +279,73 @@ mapPinMain.addEventListener('keydown', function (evt) {
 roomNumber.addEventListener('change', updateRoomsToGuestsHandler);
 
 deactivateMap();
+
+// module4-task3
+var ESC_KEYCODE = 27;
+var price = document.querySelector('#price');
+var offerTypes = document.querySelector('#type');
+var timeIn = document.querySelector('#timein');
+var timeOut = document.querySelector('#timeout');
+var cardElement;
+
+var closeCard = function () {
+  if (cardElement) {
+    cardElement.remove();
+  }
+  document.removeEventListener('keydown', cardEscPressHandler);
+};
+
+var cardEscPressHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeCard();
+  }
+};
+
+var insertCard = function (data) {
+  closeCard();
+  cardElement = createCard(data);
+  map.insertBefore(cardElement, mapFilters);
+
+  var popupClose = map.querySelector('.popup__close');
+  popupClose.addEventListener('click', function () {
+    closeCard();
+  });
+
+  document.addEventListener('keydown', cardEscPressHandler);
+};
+
+var addPinClickHandler = function (pin, dataAd) {
+  pin.addEventListener('click', function () {
+    insertCard(dataAd);
+  });
+};
+
+var updateOfferTypeToPriceHandler = function (evt) {
+  var offerType = evt.target.value;
+  if (offerType === 'bungalo') {
+    price.min = 0;
+    price.placeholder = '0';
+  } else if (offerType === 'flat') {
+    price.min = 1000;
+    price.placeholder = '1000';
+  } else if (offerType === 'house') {
+    price.min = 5000;
+    price.placeholder = '5000';
+  } else if (offerType === 'palace') {
+    price.min = 10000;
+    price.placeholder = '10000';
+  }
+};
+
+var updateTimeInHandler = function (evt) {
+  timeIn.value = evt.target.value;
+};
+
+var updateTimeOutHandler = function (evt) {
+  timeOut.value = evt.target.value;
+};
+
+offerTypes.addEventListener('change', updateOfferTypeToPriceHandler);
+timeIn.addEventListener('change', updateTimeOutHandler);
+timeOut.addEventListener('change', updateTimeInHandler);
+
