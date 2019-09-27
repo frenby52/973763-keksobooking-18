@@ -187,12 +187,10 @@ var createCard = function (data) {
   return cardElement;
 };
 
-/* eslint-disable */
-var insertCard = function (data) {
-  var cardElement = createCard(data);
-  map.insertBefore(cardElement, mapFilters);
-};
-/* eslint-enable */
+// var insertCard = function (data) {
+//   var cardElement = createCard(data);
+//   map.insertBefore(cardElement, mapFilters);
+// };
 
 // addPinElements(dataAds);
 // insertCard(dataAds[0]);
@@ -246,6 +244,8 @@ var activateMap = function () {
   setDisabledStatusInputs(documentSelects, false);
   setDisabledStatusInputs(capacity, true);
   fillAddress(getPinCoords());
+  addPinElements(dataAds);
+  addPinHandlers();
 };
 
 var deactivateMap = function () {
@@ -283,3 +283,66 @@ mapPinMain.addEventListener('keydown', function (evt) {
 roomNumber.addEventListener('change', updateRoomsToGuestsHandler);
 
 deactivateMap();
+
+// module4-task3
+// addPinElements(dataAds);
+var ESC_KEYCODE = 27;
+
+var isPopupActive = function (popup) {
+  return map.contains(popup);
+};
+
+var closePopup = function () {
+  var popup = map.querySelector('.popup');
+  map.removeChild(popup);
+  document.removeEventListener('keydown', popupEscPressHandler);
+};
+
+var popupEscPressHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
+var insertCard = function (data) {
+  var popup = map.querySelector('.popup');
+
+  var cardElement = createCard(data);
+  if (!isPopupActive(popup)) {
+    map.insertBefore(cardElement, mapFilters);
+  } else {
+    map.removeChild(popup);
+    map.insertBefore(cardElement, mapFilters);
+  }
+
+  var popupClose = map.querySelector('.popup__close');
+  popupClose.addEventListener('click', function () {
+    closePopup();
+  });
+
+  document.addEventListener('keydown', popupEscPressHandler);
+};
+
+var addPinClickHandler = function (pin, dataAd) {
+  pin.addEventListener('click', function () {
+    insertCard(dataAd);
+  });
+};
+
+var addPinEnterHandler = function (pin, dataAd) {
+  pin.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      insertCard(dataAd);
+    }
+  });
+};
+
+var addPinHandlers = function () {
+  var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  for (var i = 0; i < pins.length; i++) {
+    addPinClickHandler(pins[i], dataAds[i]);
+    addPinEnterHandler(pins[i], dataAds[i]);
+  }
+};
+
+// addPinHandlers();
