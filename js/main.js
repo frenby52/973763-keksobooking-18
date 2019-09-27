@@ -288,30 +288,30 @@ var timeIn = document.querySelector('#timein');
 var timeOut = document.querySelector('#timeout');
 var cardElement;
 
-var closePopup = function () {
+var closeCard = function () {
   if (cardElement) {
     cardElement.remove();
   }
-  document.removeEventListener('keydown', popupEscPressHandler);
+  document.removeEventListener('keydown', cardEscPressHandler);
 };
 
-var popupEscPressHandler = function (evt) {
+var cardEscPressHandler = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
-    closePopup();
+    closeCard();
   }
 };
 
 var insertCard = function (data) {
-  closePopup();
+  closeCard();
   cardElement = createCard(data);
   map.insertBefore(cardElement, mapFilters);
 
   var popupClose = map.querySelector('.popup__close');
   popupClose.addEventListener('click', function () {
-    closePopup();
+    closeCard();
   });
 
-  document.addEventListener('keydown', popupEscPressHandler);
+  document.addEventListener('keydown', cardEscPressHandler);
 };
 
 var addPinClickHandler = function (pin, dataAd) {
