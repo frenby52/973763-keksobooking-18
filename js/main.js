@@ -102,6 +102,7 @@ var createPin = function (data) {
   element.style.top = data.location.y - PIN_GAP_Y + 'px';
   element.querySelector('img').src = data.author.avatar;
   element.querySelector('img').alt = data.offer.title;
+  addPinClickHandler(element, data);
 
   return element;
 };
@@ -241,7 +242,6 @@ var activateMap = function () {
   setDisabledStatusInputs(capacity, true);
   fillAddress(getPinCoords());
   addPinElements(dataAds);
-  addPinHandlers();
 };
 
 var deactivateMap = function () {
@@ -286,14 +286,12 @@ var price = document.querySelector('#price');
 var offerTypes = document.querySelector('#type');
 var timeIn = document.querySelector('#timein');
 var timeOut = document.querySelector('#timeout');
-
-var isPopupActive = function (popup) {
-  return map.contains(popup);
-};
+var cardElement;
 
 var closePopup = function () {
-  var popup = map.querySelector('.popup');
-  map.removeChild(popup);
+  if (cardElement) {
+    cardElement.remove();
+  }
   document.removeEventListener('keydown', popupEscPressHandler);
 };
 
@@ -304,15 +302,9 @@ var popupEscPressHandler = function (evt) {
 };
 
 var insertCard = function (data) {
-  var popup = map.querySelector('.popup');
-
-  var cardElement = createCard(data);
-  if (!isPopupActive(popup)) {
-    map.insertBefore(cardElement, mapFilters);
-  } else {
-    map.removeChild(popup);
-    map.insertBefore(cardElement, mapFilters);
-  }
+  closePopup();
+  cardElement = createCard(data);
+  map.insertBefore(cardElement, mapFilters);
 
   var popupClose = map.querySelector('.popup__close');
   popupClose.addEventListener('click', function () {
@@ -328,23 +320,6 @@ var addPinClickHandler = function (pin, dataAd) {
   });
 };
 
-var addPinEnterHandler = function (pin, dataAd) {
-  pin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      insertCard(dataAd);
-    }
-  });
-};
-
-var addPinHandlers = function () {
-  var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-  for (var i = 0; i < pins.length; i++) {
-    addPinClickHandler(pins[i], dataAds[i]);
-    addPinEnterHandler(pins[i], dataAds[i]);
-  }
-};
-
-// addPinHandlers();
 var updateOfferTypeToPriceHandler = function (evt) {
   var offerType = evt.target.value;
   if (offerType === 'bungalo') {
@@ -363,25 +338,11 @@ var updateOfferTypeToPriceHandler = function (evt) {
 };
 
 var updateTimeInHandler = function (evt) {
-  var time = evt.target.value;
-  if (time === '12:00') {
-    timeIn.value = timeIn.options[0].value;
-  } else if (time === '13:00') {
-    timeIn.value = timeIn.options[1].value;
-  } else if (time === '14:00') {
-    timeIn.value = timeIn.options[2].value;
-  }
+  timeIn.value = evt.target.value;
 };
 
 var updateTimeOutHandler = function (evt) {
-  var time = evt.target.value;
-  if (time === '12:00') {
-    timeOut.value = timeOut.options[0].value;
-  } else if (time === '13:00') {
-    timeOut.value = timeOut.options[1].value;
-  } else if (time === '14:00') {
-    timeOut.value = timeOut.options[2].value;
-  }
+  timeOut.value = evt.target.value;
 };
 
 offerTypes.addEventListener('change', updateOfferTypeToPriceHandler);
