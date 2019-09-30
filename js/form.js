@@ -2,6 +2,9 @@
 
 (function () {
   var adForm = document.querySelector('.ad-form');
+  var documentInputs = document.querySelectorAll('input');
+  var documentSelects = document.querySelectorAll('select');
+  var addressInput = adForm.querySelector('#address');
   var roomNumber = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
   var price = document.querySelector('#price');
@@ -14,6 +17,29 @@
     '2': ['2', '1'],
     '3': ['3', '2', '1'],
     '100': ['0']
+  };
+
+  var setDisabledStatusInputs = function (inputs, isDisabled) {
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].disabled = isDisabled;
+    }
+  };
+
+  var disable = function () {
+    adForm.classList.add('ad-form--disabled');
+    setDisabledStatusInputs(documentInputs, true);
+    setDisabledStatusInputs(documentSelects, true);
+  };
+
+  var enable = function () {
+    adForm.classList.remove('ad-form--disabled');
+    setDisabledStatusInputs(documentInputs, false);
+    setDisabledStatusInputs(documentSelects, false);
+    setDisabledStatusInputs(capacity, true);
+  };
+
+  var fillAddress = function (coords) {
+    addressInput.value = coords.x + ', ' + coords.y;
   };
 
   var updateRoomsToGuestsHandler = function (evt) {
@@ -59,4 +85,10 @@
   offerTypes.addEventListener('change', updateOfferTypeToPriceHandler);
   timeIn.addEventListener('change', updateTimeOutHandler);
   timeOut.addEventListener('change', updateTimeInHandler);
+
+  window.form = {
+    fillAddress: fillAddress,
+    disable: disable,
+    enable: enable
+  };
 })();

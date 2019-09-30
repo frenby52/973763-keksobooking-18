@@ -60,7 +60,5 @@
 
   var dataAds = generateData(ELEMENTS_QUANTITY);
 
-  window.data = {
-    dataAds: dataAds
-  };
+  window.data = dataAds;
 })();

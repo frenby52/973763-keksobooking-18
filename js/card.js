@@ -3,8 +3,6 @@
 (function () {
   var cardTemplateId = document.querySelector('#card');
   var cardTemplate = cardTemplateId.content.querySelector('.popup');
-  var mapFilters = document.querySelector('.map__filters-container');
-  var map = document.querySelector('.map');
   var getOfferType = function (data) {
     var textContent = '';
     if (data.offer.type === 'flat') {
@@ -66,33 +64,7 @@
     return cardElement;
   };
 
-  var insertCard = function (data) {
-    closeCard();
-    cardElement = createCard(data);
-    map.insertBefore(cardElement, mapFilters);
-
-    var popupClose = map.querySelector('.popup__close');
-    popupClose.addEventListener('click', function () {
-      closeCard();
-    });
-
-    document.addEventListener('keydown', cardEscPressHandler);
-  };
-
-  var cardElement;
-
-  var closeCard = function () {
-    if (cardElement) {
-      cardElement.remove();
-    }
-    document.removeEventListener('keydown', cardEscPressHandler);
-  };
-
-  var cardEscPressHandler = function (evt) {
-    window.util.isEscEvent(evt, closeCard);
-  };
-
   window.card = {
-    insertCard: insertCard
+    createCard: createCard
   };
 })();
