@@ -44,10 +44,17 @@
     }
   };
 
+  var setDisabledStatusInputs = function (inputs, isDisabled) {
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].disabled = isDisabled;
+    }
+  };
+
   window.util = {
     randomInteger: randomInteger,
     getRandomArray: getRandomArray,
     isEscEvent: isEscEvent,
-    isEnterEvent: isEnterEvent
+    isEnterEvent: isEnterEvent,
+    setDisabledStatusInputs: setDisabledStatusInputs
   };
 })();

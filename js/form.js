@@ -19,23 +19,23 @@
     '100': ['0']
   };
 
-  var setDisabledStatusInputs = function (inputs, isDisabled) {
-    for (var i = 0; i < inputs.length; i++) {
-      inputs[i].disabled = isDisabled;
-    }
-  };
+  // var setDisabledStatusInputs = function (inputs, isDisabled) {
+  //   for (var i = 0; i < inputs.length; i++) {
+  //     inputs[i].disabled = isDisabled;
+  //   }
+  // };
 
   var disable = function () {
     adForm.classList.add('ad-form--disabled');
-    setDisabledStatusInputs(documentInputs, true);
-    setDisabledStatusInputs(documentSelects, true);
+    window.util.setDisabledStatusInputs(documentInputs, true);
+    window.util.setDisabledStatusInputs(documentSelects, true);
   };
 
   var enable = function () {
     adForm.classList.remove('ad-form--disabled');
-    setDisabledStatusInputs(documentInputs, false);
-    setDisabledStatusInputs(documentSelects, false);
-    setDisabledStatusInputs(capacity, true);
+    window.util.setDisabledStatusInputs(documentInputs, false);
+    window.util.setDisabledStatusInputs(documentSelects, false);
+    window.util.setDisabledStatusInputs(capacity, true);
   };
 
   var fillAddress = function (coords) {
