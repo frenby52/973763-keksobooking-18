@@ -44,7 +44,7 @@
     return documentFragment;
   };
 
-  var createCard = function (data) {
+  var createCardElement = function (data) {
     var cardElement = cardTemplate.cloneNode(true);
     var featuresList = cardElement.querySelector('.popup__features');
     var photosList = cardElement.querySelector('.popup__photos');
@@ -62,6 +62,30 @@
     cardElement.querySelector('.popup__avatar').src = data.author.avatar;
 
     return cardElement;
+  };
+
+  var createCard = function (data) {
+    var cardElement = createCardElement(data);
+    var popupClose = cardElement.querySelector('.popup__close');
+    var closeCard = function () {
+      cardElement.remove();
+      document.removeEventListener('keydown', cardEscPressHandler);
+    };
+
+    var cardEscPressHandler = function (evt) {
+      window.util.isEscEvent(evt, closeCard);
+    };
+
+    popupClose.addEventListener('click', function () {
+      closeCard();
+    });
+
+    document.addEventListener('keydown', cardEscPressHandler);
+
+    return {
+      element: cardElement,
+      close: closeCard
+    };
   };
 
   window.card = {

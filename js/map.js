@@ -8,30 +8,14 @@
   var mapFilters = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
-  var cardElement;
+  var card;
 
   var insertCard = function (data) {
-    closeCard();
-    cardElement = window.card.createCard(data);
-    map.insertBefore(cardElement, mapFilters);
-
-    var popupClose = map.querySelector('.popup__close');
-    popupClose.addEventListener('click', function () {
-      closeCard();
-    });
-
-    document.addEventListener('keydown', cardEscPressHandler);
-  };
-
-  var closeCard = function () {
-    if (cardElement) {
-      cardElement.remove();
+    if (card) {
+      card.close();
     }
-    document.removeEventListener('keydown', cardEscPressHandler);
-  };
-
-  var cardEscPressHandler = function (evt) {
-    window.util.isEscEvent(evt, closeCard);
+    card = window.card.createCard(data);
+    map.insertBefore(card.element, mapFilters);
   };
 
   var addPinClickHandler = function (pin, data) {
