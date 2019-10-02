@@ -13,6 +13,7 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
   var card;
+  var isMapDisabled = true;
 
   var insertCard = function (data) {
     if (card) {
@@ -71,6 +72,11 @@
 
   var pinMainMoveMousedownHandler = function (evt) {
     evt.preventDefault();
+    if (isMapDisabled) {
+      activateMap();
+      isMapDisabled = false;
+    }
+
     var startCoords = {
       x: evt.clientX,
       y: evt.clientY
@@ -92,11 +98,11 @@
       var currentY = mapPinMain.offsetTop - shift.y;
       var currentX = mapPinMain.offsetLeft - shift.x;
 
-      if (currentY >= (PIN_MIN_Y - MAIN_PIN_HEIGHT - MAIN_PIN_TAIL_HEIGHT) && currentY <= (PIN_MAX_Y - MAIN_PIN_HEIGHT - MAIN_PIN_TAIL_HEIGHT)) {
+      if (currentY >= PIN_MIN_Y - MAIN_PIN_HEIGHT - MAIN_PIN_TAIL_HEIGHT && currentY <= PIN_MAX_Y - MAIN_PIN_HEIGHT - MAIN_PIN_TAIL_HEIGHT) {
         mapPinMain.style.top = currentY + 'px';
       }
 
-      if (currentX >= (PIN_MIN_X - MAIN_PIN_WIDTH / 2) && currentX <= (PIN_MAX_X - MAIN_PIN_WIDTH / 2)) {
+      if (currentX >= PIN_MIN_X - MAIN_PIN_WIDTH / 2 && currentX <= PIN_MAX_X - MAIN_PIN_WIDTH / 2) {
         mapPinMain.style.left = currentX + 'px';
       }
       window.form.fillAddress(getPinCoords());
@@ -112,12 +118,7 @@
     document.addEventListener('mouseup', mouseupHandler);
   };
 
-  // mapPinMain.addEventListener('mousedown', pinMainMoveMousedownHandler);
-
-  mapPinMain.addEventListener('mousedown', function (evt) {
-    activateMap();
-    pinMainMoveMousedownHandler(evt);
-  });
+  mapPinMain.addEventListener('mousedown', pinMainMoveMousedownHandler);
 
   var mapPinMainEnterPressHandler = function (evt) {
     window.util.isEnterEvent(evt, activateMap);
