@@ -19,12 +19,6 @@
     '100': ['0']
   };
 
-  // var setDisabledStatusInputs = function (inputs, isDisabled) {
-  //   for (var i = 0; i < inputs.length; i++) {
-  //     inputs[i].disabled = isDisabled;
-  //   }
-  // };
-
   var disable = function () {
     adForm.classList.add('ad-form--disabled');
     window.util.setDisabledStatusInputs(documentInputs, true);
