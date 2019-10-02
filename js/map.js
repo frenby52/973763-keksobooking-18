@@ -4,6 +4,10 @@
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT = 62;
   var MAIN_PIN_TAIL_HEIGHT = 22;
+  var PIN_MIN_X = 0;
+  var PIN_MAX_X = 1200;
+  var PIN_MIN_Y = 130;
+  var PIN_MAX_Y = 630;
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
@@ -40,14 +44,14 @@
     mapPins.appendChild(documentFragment);
   };
 
-  var isMapActive = function () {
+  var isMapDisabled = function () {
     return map.classList.contains('map--faded');
   };
 
   var getPinCoords = function () {
     var pinCoords = {};
     pinCoords.x = Math.round(parseInt(mapPinMain.style.left, 10) + MAIN_PIN_WIDTH / 2);
-    pinCoords.y = isMapActive() ? Math.round(parseInt(mapPinMain.style.top, 10) + MAIN_PIN_HEIGHT / 2) : Math.round(parseInt(mapPinMain.style.top, 10) + MAIN_PIN_HEIGHT + MAIN_PIN_TAIL_HEIGHT);
+    pinCoords.y = isMapDisabled() ? Math.round(parseInt(mapPinMain.style.top, 10) + MAIN_PIN_HEIGHT / 2) : Math.round(parseInt(mapPinMain.style.top, 10) + MAIN_PIN_HEIGHT + MAIN_PIN_TAIL_HEIGHT);
 
     return pinCoords;
   };
@@ -65,9 +69,54 @@
     window.form.fillAddress(getPinCoords());
   };
 
-  mapPinMain.addEventListener('mousedown', function () {
-    activateMap();
-  });
+  var pinMainMoveMousedownHandler = function (evt) {
+    evt.preventDefault();
+    if (isMapDisabled()) {
+      activateMap();
+    }
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var mousemoveHandler = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      var currentY = mapPinMain.offsetTop - shift.y;
+      var currentX = mapPinMain.offsetLeft - shift.x;
+
+      if (currentY >= PIN_MIN_Y - MAIN_PIN_HEIGHT - MAIN_PIN_TAIL_HEIGHT && currentY <= PIN_MAX_Y - MAIN_PIN_HEIGHT - MAIN_PIN_TAIL_HEIGHT) {
+        mapPinMain.style.top = currentY + 'px';
+      }
+
+      if (currentX >= PIN_MIN_X - MAIN_PIN_WIDTH / 2 && currentX <= PIN_MAX_X - MAIN_PIN_WIDTH / 2) {
+        mapPinMain.style.left = currentX + 'px';
+      }
+      window.form.fillAddress(getPinCoords());
+    };
+
+    var mouseupHandler = function (upEvt) {
+      upEvt.preventDefault();
+      document.removeEventListener('mousemove', mousemoveHandler);
+      document.removeEventListener('mouseup', mouseupHandler);
+    };
+
+    document.addEventListener('mousemove', mousemoveHandler);
+    document.addEventListener('mouseup', mouseupHandler);
+  };
+
+  mapPinMain.addEventListener('mousedown', pinMainMoveMousedownHandler);
 
   var mapPinMainEnterPressHandler = function (evt) {
     window.util.isEnterEvent(evt, activateMap);
