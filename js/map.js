@@ -13,7 +13,6 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
   var card;
-  var isMapDisabled = true;
 
   var insertCard = function (data) {
     if (card) {
@@ -45,14 +44,14 @@
     mapPins.appendChild(documentFragment);
   };
 
-  var isMapActive = function () {
+  var isMapDisabled = function () {
     return map.classList.contains('map--faded');
   };
 
   var getPinCoords = function () {
     var pinCoords = {};
     pinCoords.x = Math.round(parseInt(mapPinMain.style.left, 10) + MAIN_PIN_WIDTH / 2);
-    pinCoords.y = isMapActive() ? Math.round(parseInt(mapPinMain.style.top, 10) + MAIN_PIN_HEIGHT / 2) : Math.round(parseInt(mapPinMain.style.top, 10) + MAIN_PIN_HEIGHT + MAIN_PIN_TAIL_HEIGHT);
+    pinCoords.y = isMapDisabled() ? Math.round(parseInt(mapPinMain.style.top, 10) + MAIN_PIN_HEIGHT / 2) : Math.round(parseInt(mapPinMain.style.top, 10) + MAIN_PIN_HEIGHT + MAIN_PIN_TAIL_HEIGHT);
 
     return pinCoords;
   };
@@ -72,9 +71,8 @@
 
   var pinMainMoveMousedownHandler = function (evt) {
     evt.preventDefault();
-    if (isMapDisabled) {
+    if (isMapDisabled()) {
       activateMap();
-      isMapDisabled = false;
     }
 
     var startCoords = {
