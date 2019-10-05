@@ -56,11 +56,26 @@
     return pinCoords;
   };
 
+  var loadSuccessHandler = function (data) {
+    addPinElements(data);
+  };
+
+  var loadErrorHandler = function (error) {
+    var errorTemplateId = document.querySelector('#error');
+    var errorTemplate = errorTemplateId.content.querySelector('.error');
+    var main = document.querySelector('main');
+    var errorElement = errorTemplate.cloneNode(true);
+    var errorMessage = errorElement.querySelector('.error__message');
+    errorMessage.textContent = error;
+    main.appendChild(errorElement);
+  };
+
   var activateMap = function () {
     map.classList.remove('map--faded');
     window.form.enable();
     window.form.fillAddress(getPinCoords());
-    addPinElements(window.data);
+    window.loadData(loadSuccessHandler, loadErrorHandler);
+    // addPinElements(window.data);
   };
 
   var deactivateMap = function () {
