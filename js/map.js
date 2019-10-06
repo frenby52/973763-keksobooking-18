@@ -56,11 +56,19 @@
     return pinCoords;
   };
 
-  var activateMap = function () {
+  var loadSuccessHandler = function (data) {
     map.classList.remove('map--faded');
     window.form.enable();
     window.form.fillAddress(getPinCoords());
-    addPinElements(window.data);
+    addPinElements(data);
+  };
+
+  var loadErrorHandler = function (error) {
+    window.message.showError(error);
+  };
+
+  var activateMap = function () {
+    window.loadData(loadSuccessHandler, loadErrorHandler);
   };
 
   var deactivateMap = function () {
