@@ -30,6 +30,7 @@
     window.util.setDisabledStatusInputs(documentInputs, false);
     window.util.setDisabledStatusInputs(documentSelects, false);
     window.util.setDisabledStatusInputs(capacity, true);
+    capacity.querySelector('option[selected]').disabled = false;
   };
 
   var fillAddress = function (coords) {
@@ -65,6 +66,7 @@
       price.min = 10000;
       price.placeholder = '10000';
     }
+    price.value = price.min;
   };
 
   var updateTimeInHandler = function (evt) {
