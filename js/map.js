@@ -12,7 +12,6 @@
   var mapFilters = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
-  var adForm = document.querySelector('.ad-form');
   var card;
   var mapPinMainDefaultCoords = {
     x: mapPinMain.style.left,
@@ -78,32 +77,34 @@
     }
   };
 
-  var formUploadSuccessHandler = function () {
-    window.message.showSuccess();
-    adForm.reset();
-    deactivateMap();
-    var mapPinsAdded = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
-    removePins(mapPinsAdded);
+  var resetMapPinMainCoords = function () {
     mapPinMain.style.left = mapPinMainDefaultCoords.x;
     mapPinMain.style.top = mapPinMainDefaultCoords.y;
+  };
+
+  var formUploadSuccessHandler = function () {
+    window.message.showSuccess();
+    window.form.reset();
+    deactivateMap();
+    resetMapPinMainCoords();
     window.form.fillAddress(getPinCoords());
   };
 
   var formSubmitHandler = function (evt) {
-    window.uploadData(new FormData(adForm), formUploadSuccessHandler, loadErrorHandler);
+    window.backend.upload(new FormData(document.querySelector('.ad-form')), formUploadSuccessHandler, loadErrorHandler);
     evt.preventDefault();
   };
 
-  adForm.addEventListener('submit', formSubmitHandler);
-
   var activateMap = function () {
-    window.loadData(loadSuccessHandler, loadErrorHandler);
+    window.backend.load(loadSuccessHandler, loadErrorHandler);
   };
 
   var deactivateMap = function () {
     if (card) {
       card.close();
     }
+    var mapPinsAdded = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    removePins(mapPinsAdded);
     map.classList.add('map--faded');
     window.form.disable();
     window.form.fillAddress(getPinCoords());
@@ -156,13 +157,12 @@
     document.addEventListener('mouseup', mouseupHandler);
   };
 
-  mapPinMain.addEventListener('mousedown', pinMainMoveMousedownHandler);
-
   var mapPinMainEnterPressHandler = function (evt) {
     window.util.isEnterEvent(evt, activateMap);
   };
 
-  mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
-
   deactivateMap();
+  window.form.setSubmit(formSubmitHandler);
+  mapPinMain.addEventListener('mousedown', pinMainMoveMousedownHandler);
+  mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
 })();
