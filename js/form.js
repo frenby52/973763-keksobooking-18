@@ -30,6 +30,11 @@
     window.util.setDisabledStatusInputs(documentInputs, false);
     window.util.setDisabledStatusInputs(documentSelects, false);
     window.util.setDisabledStatusInputs(capacity, true);
+    capacity.querySelector('option[selected]').disabled = false;
+  };
+
+  var reset = function () {
+    adForm.reset();
   };
 
   var fillAddress = function (coords) {
@@ -65,6 +70,7 @@
       price.min = 10000;
       price.placeholder = '10000';
     }
+    price.value = price.min;
   };
 
   var updateTimeInHandler = function (evt) {
@@ -75,6 +81,10 @@
     timeOut.value = evt.target.value;
   };
 
+  var setSubmit = function (formSubmitHandler) {
+    adForm.addEventListener('submit', formSubmitHandler);
+  };
+
   roomNumber.addEventListener('change', updateRoomsToGuestsHandler);
   offerTypes.addEventListener('change', updateOfferTypeToPriceHandler);
   timeIn.addEventListener('change', updateTimeOutHandler);
@@ -83,6 +93,8 @@
   window.form = {
     fillAddress: fillAddress,
     disable: disable,
-    enable: enable
+    enable: enable,
+    reset: reset,
+    setSubmit: setSubmit
   };
 })();
