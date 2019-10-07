@@ -91,7 +91,7 @@
   };
 
   var formSubmitHandler = function (evt) {
-    window.backend.upload(new FormData(document.querySelector('.ad-form')), formUploadSuccessHandler, loadErrorHandler);
+    window.backend.upload(new FormData(evt.target), formUploadSuccessHandler, loadErrorHandler);
     evt.preventDefault();
   };
 
