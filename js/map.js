@@ -8,11 +8,13 @@
   var PIN_MAX_X = 1200;
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
+  var QUANTITY_FILTER = 5;
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
   var card;
+  var dataCopy = [];
   var mapPinMainDefaultCoords = {
     x: mapPinMain.style.left,
     y: mapPinMain.style.top
@@ -61,10 +63,23 @@
   };
 
   var loadSuccessHandler = function (data) {
+    dataCopy = data;
     map.classList.remove('map--faded');
     window.form.enable();
     window.form.fillAddress(getPinCoords());
-    addPinElements(data);
+    // addPinElements(data);
+    updatePinsToOffer();
+  };
+
+  var updatePinsToOffer = function () {
+    var mapPinsAdded = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    removePins(mapPinsAdded);
+    if (card) {
+      card.close();
+    }
+    var dataByOfferType = window.form.getSameOfferTypeData(dataCopy);
+    var dataByQuantityFilter = dataByOfferType.slice(0, QUANTITY_FILTER);
+    addPinElements(dataByQuantityFilter);
   };
 
   var loadErrorHandler = function (error) {
@@ -161,7 +176,12 @@
     window.util.isEnterEvent(evt, activateMap);
   };
 
+  var offerTypeChangeHandler = function () {
+    updatePinsToOffer();
+  };
+
   deactivateMap();
+  window.form.setOfferType(offerTypeChangeHandler);
   window.form.setSubmit(formSubmitHandler);
   mapPinMain.addEventListener('mousedown', pinMainMoveMousedownHandler);
   mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);

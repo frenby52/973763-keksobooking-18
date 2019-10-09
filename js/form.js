@@ -73,6 +73,14 @@
     price.value = price.min;
   };
 
+  var getSameOfferTypeData = function (dataCopy) {
+    var dataByOfferType = dataCopy.filter(function (elem) {
+      return elem.offer.type === offerTypes.value;
+    });
+
+    return dataByOfferType;
+  };
+
   var updateTimeInHandler = function (evt) {
     timeIn.value = evt.target.value;
   };
@@ -85,6 +93,10 @@
     adForm.addEventListener('submit', formSubmitHandler);
   };
 
+  var setOfferType = function (offerTypeChangeHandler) {
+    offerTypes.addEventListener('change', offerTypeChangeHandler);
+  };
+
   roomNumber.addEventListener('change', updateRoomsToGuestsHandler);
   offerTypes.addEventListener('change', updateOfferTypeToPriceHandler);
   timeIn.addEventListener('change', updateTimeOutHandler);
@@ -95,6 +107,8 @@
     disable: disable,
     enable: enable,
     reset: reset,
-    setSubmit: setSubmit
+    setSubmit: setSubmit,
+    getSameOfferTypeData: getSameOfferTypeData,
+    setOfferType: setOfferType
   };
 })();
