@@ -10,6 +10,7 @@
   var mapFiltersSelects = mapFilters.querySelectorAll('select');
   var featureInputs = housingFeatures.querySelectorAll('input');
   var QUANTITY_FILTER = 5;
+  var DEBOUNCE_INTERVAL = 500;
 
   var disableFilters = function () {
     window.util.setDisabledStatusInputs(mapFiltersSelects, true);
@@ -103,10 +104,23 @@
     return dataByOfferFeatures;
   };
 
+  var debounce = function (cb) {
+    var lastTimeout = null;
 
-  var filterChangeHandler = function () {
-    window.map.updatePins();
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
   };
+
+  var filterChangeHandler = debounce(function () {
+    window.map.updatePins();
+  });
 
   var addFeaturesHandlers = function () {
     featureInputs.forEach(function (elem) {
