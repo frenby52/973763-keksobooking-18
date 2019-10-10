@@ -8,12 +8,11 @@
   var PIN_MAX_X = 1200;
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
-  var QUANTITY_FILTER = 5;
+
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
-  var housingType = document.querySelector('#housing-type');
   var card;
   var dataCopy = [];
   var mapPinMainDefaultCoords = {
@@ -21,10 +20,14 @@
     y: mapPinMain.style.top
   };
 
-  var insertCard = function (data) {
+  var clearMap = function () {
     if (card) {
       card.close();
     }
+  };
+
+  var insertCard = function (data) {
+    clearMap();
     card = window.card.createCard(data);
     map.insertBefore(card.element, mapFilters);
   };
@@ -67,31 +70,17 @@
     dataCopy = data;
     map.classList.remove('map--faded');
     window.form.enable();
+    window.filter.enableFilters();
     window.form.fillAddress(getPinCoords());
     // addPinElements(data);
-    updatePinsToOffer();
+    updatePins();
   };
 
-  var updatePinsToOffer = function () {
+  var updatePins = function () {
     var mapPinsAdded = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
     removePins(mapPinsAdded);
-    if (card) {
-      card.close();
-    }
-    var dataByOfferType = getSameOfferTypeData(dataCopy);
-    var dataByQuantityFilter = dataByOfferType.slice(0, QUANTITY_FILTER);
-    addPinElements(dataByQuantityFilter);
-  };
-
-  var getSameOfferTypeData = function (data) {
-    var dataByOfferType = data;
-    if (housingType.value !== 'any') {
-      dataByOfferType = data.filter(function (elem) {
-        return elem.offer.type === housingType.value;
-      });
-    }
-
-    return dataByOfferType;
+    clearMap();
+    addPinElements(window.filter.getData(dataCopy));
   };
 
   var loadErrorHandler = function (error) {
@@ -127,13 +116,12 @@
   };
 
   var deactivateMap = function () {
-    if (card) {
-      card.close();
-    }
+    clearMap();
     var mapPinsAdded = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
     removePins(mapPinsAdded);
     map.classList.add('map--faded');
     window.form.disable();
+    window.filter.disableFilters();
     window.form.fillAddress(getPinCoords());
   };
 
@@ -188,13 +176,13 @@
     window.util.isEnterEvent(evt, activateMap);
   };
 
-  var offerTypeChangeHandler = function () {
-    updatePinsToOffer();
-  };
 
   deactivateMap();
-  housingType.addEventListener('change', offerTypeChangeHandler);
   window.form.setSubmit(formSubmitHandler);
   mapPinMain.addEventListener('mousedown', pinMainMoveMousedownHandler);
   mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
+
+  window.map = {
+    updatePins: updatePins
+  };
 })();
