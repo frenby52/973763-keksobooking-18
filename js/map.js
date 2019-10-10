@@ -84,9 +84,12 @@
   };
 
   var getSameOfferTypeData = function (data) {
-    var dataByOfferType = data.filter(function (elem) {
-      return elem.offer.type === housingType.value;
-    });
+    var dataByOfferType = data;
+    if (housingType.value !== 'any') {
+      dataByOfferType = data.filter(function (elem) {
+        return elem.offer.type === housingType.value;
+      });
+    }
 
     return dataByOfferType;
   };
