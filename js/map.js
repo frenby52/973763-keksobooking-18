@@ -13,6 +13,7 @@
   var mapFilters = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
+  var housingType = document.querySelector('#housing-type');
   var card;
   var dataCopy = [];
   var mapPinMainDefaultCoords = {
@@ -77,9 +78,17 @@
     if (card) {
       card.close();
     }
-    var dataByOfferType = window.form.getSameOfferTypeData(dataCopy);
+    var dataByOfferType = getSameOfferTypeData(dataCopy);
     var dataByQuantityFilter = dataByOfferType.slice(0, QUANTITY_FILTER);
     addPinElements(dataByQuantityFilter);
+  };
+
+  var getSameOfferTypeData = function (data) {
+    var dataByOfferType = data.filter(function (elem) {
+      return elem.offer.type === housingType.value;
+    });
+
+    return dataByOfferType;
   };
 
   var loadErrorHandler = function (error) {
@@ -181,7 +190,7 @@
   };
 
   deactivateMap();
-  window.form.setOfferType(offerTypeChangeHandler);
+  housingType.addEventListener('change', offerTypeChangeHandler);
   window.form.setSubmit(formSubmitHandler);
   mapPinMain.addEventListener('mousedown', pinMainMoveMousedownHandler);
   mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
