@@ -20,14 +20,14 @@
     y: mapPinMain.style.top
   };
 
-  var clearMap = function () {
+  var closeCard = function () {
     if (card) {
       card.close();
     }
   };
 
   var insertCard = function (data) {
-    clearMap();
+    closeCard();
     card = window.card.createCard(data);
     map.insertBefore(card.element, mapFilters);
   };
@@ -79,7 +79,7 @@
   var updatePins = function () {
     var mapPinsAdded = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
     removePins(mapPinsAdded);
-    clearMap();
+    closeCard();
     addPinElements(window.filter.getData(dataCopy));
   };
 
@@ -116,9 +116,9 @@
   };
 
   var deactivateMap = function () {
-    clearMap();
     var mapPinsAdded = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
     removePins(mapPinsAdded);
+    closeCard();
     map.classList.add('map--faded');
     window.form.disable();
     window.filter.disableFilters();
