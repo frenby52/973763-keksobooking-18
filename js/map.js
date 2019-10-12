@@ -8,20 +8,26 @@
   var PIN_MAX_X = 1200;
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
+
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
   var card;
+  var dataCopy = [];
   var mapPinMainDefaultCoords = {
     x: mapPinMain.style.left,
     y: mapPinMain.style.top
   };
 
-  var insertCard = function (data) {
+  var closeCard = function () {
     if (card) {
       card.close();
     }
+  };
+
+  var insertCard = function (data) {
+    closeCard();
     card = window.card.createCard(data);
     map.insertBefore(card.element, mapFilters);
   };
@@ -61,10 +67,20 @@
   };
 
   var loadSuccessHandler = function (data) {
+    dataCopy = data;
     map.classList.remove('map--faded');
     window.form.enable();
+    window.filter.enableFilters();
     window.form.fillAddress(getPinCoords());
-    addPinElements(data);
+    // addPinElements(data);
+    updatePins();
+  };
+
+  var updatePins = function () {
+    var mapPinsAdded = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    removePins(mapPinsAdded);
+    closeCard();
+    addPinElements(window.filter.getData(dataCopy));
   };
 
   var loadErrorHandler = function (error) {
@@ -100,13 +116,12 @@
   };
 
   var deactivateMap = function () {
-    if (card) {
-      card.close();
-    }
     var mapPinsAdded = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
     removePins(mapPinsAdded);
+    closeCard();
     map.classList.add('map--faded');
     window.form.disable();
+    window.filter.disableFilters();
     window.form.fillAddress(getPinCoords());
   };
 
@@ -161,8 +176,13 @@
     window.util.isEnterEvent(evt, activateMap);
   };
 
+
   deactivateMap();
   window.form.setSubmit(formSubmitHandler);
   mapPinMain.addEventListener('mousedown', pinMainMoveMousedownHandler);
   mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
+
+  window.map = {
+    updatePins: updatePins
+  };
 })();
