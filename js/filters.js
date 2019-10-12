@@ -65,18 +65,15 @@
     return isFeatureChecked;
   };
 
-  mapFilter.addEventListener('change', function (evt) {
-    if (evt.target.tagName === 'INPUT' || evt.target.tagName === 'SELECT') {
-      window.debounce(function () {
-        window.map.updatePins();
-      })();
-    }
+  var filterChangeHandler = window.debounce(function () {
+    window.map.updatePins();
   });
+
+  mapFilter.addEventListener('change', filterChangeHandler);
 
   window.filter = {
     getData: getData,
     disableFilters: disableFilters,
     enableFilters: enableFilters
   };
-
 })();
