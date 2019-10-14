@@ -4,11 +4,11 @@
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
 
-  function randomInteger(min, max) {
+  var randomInteger = function (min, max) {
     var rand = min + Math.random() * (max + 1 - min);
 
     return Math.floor(rand);
-  }
+  };
 
   var getRandomArray = function (data) {
     var randomArray = [];
