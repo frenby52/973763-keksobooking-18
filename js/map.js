@@ -65,8 +65,14 @@
     return pinCoords;
   };
 
+  var getValidData = function (data) {
+    return data.filter(function (elem) {
+      return elem.offer;
+    });
+  };
+
   var loadSuccessHandler = function (data) {
-    dataCopy = data;
+    dataCopy = getValidData(data);
     map.classList.remove('map--faded');
     window.form.enable();
     window.filter.enable();
