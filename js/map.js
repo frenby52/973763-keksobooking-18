@@ -100,8 +100,6 @@
     window.message.showSuccess();
     window.form.reset();
     deactivateMap();
-    resetMapPinMainCoords();
-    window.form.fillAddress(getPinCoords());
   };
 
   var formSubmitHandler = function (evt) {
@@ -120,6 +118,7 @@
     map.classList.add('map--faded');
     window.form.disable();
     window.filter.disable();
+    resetMapPinMainCoords();
     window.form.fillAddress(getPinCoords());
   };
 
@@ -181,6 +180,7 @@
   mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
 
   window.map = {
-    updatePins: updatePins
+    updatePins: updatePins,
+    deactivate: deactivateMap
   };
 })();
