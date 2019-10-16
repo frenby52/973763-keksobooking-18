@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var QUANTITY_FILTER = 5;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   var mapFilter = mapFiltersContainer.querySelector('.map__filters');
   var housingType = document.querySelector('#housing-type');
@@ -10,7 +11,6 @@
   var housingFeatures = document.querySelector('#housing-features');
   var mapFiltersSelects = mapFiltersContainer.querySelectorAll('select');
   var featureInputs = housingFeatures.querySelectorAll('input');
-  var QUANTITY_FILTER = 5;
 
   var disableFilters = function () {
     window.util.setDisabledStatusInputs(mapFiltersSelects, true);
@@ -73,7 +73,7 @@
 
   window.filter = {
     getData: getData,
-    disableFilters: disableFilters,
-    enableFilters: enableFilters
+    disable: disableFilters,
+    enable: enableFilters
   };
 })();

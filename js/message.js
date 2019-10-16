@@ -7,7 +7,6 @@
     var errorTemplateId = document.querySelector('#error');
     var errorTemplate = errorTemplateId.content.querySelector('.error');
     var errorElement = errorTemplate.cloneNode(true);
-    // var errorButton = errorElement.querySelector('.error__button');
     var errorMessage = errorElement.querySelector('.error__message');
     errorMessage.innerHTML = errorMessage.textContent + '<br>' + error;
 
@@ -15,10 +14,6 @@
       errorElement.remove();
       document.removeEventListener('keydown', errorMessageEscPressHandler);
     };
-
-    // errorButton.addEventListener('click', function () {
-    //   closeErrorMessage();
-    // });
 
     errorElement.addEventListener('click', function () {
       closeErrorMessage();

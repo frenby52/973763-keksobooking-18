@@ -89,6 +89,6 @@
   };
 
   window.card = {
-    createCard: createCard
+    create: createCard
   };
 })();

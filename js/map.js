@@ -8,7 +8,6 @@
   var PIN_MAX_X = 1200;
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
-
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
@@ -28,7 +27,7 @@
 
   var insertCard = function (data) {
     closeCard();
-    card = window.card.createCard(data);
+    card = window.card.create(data);
     map.insertBefore(card.element, mapFilters);
   };
 
@@ -41,7 +40,7 @@
   var createPinElements = function (data) {
     var documentFragment = document.createDocumentFragment();
     for (var i = 0; i < data.length; i++) {
-      var element = window.pin.createPin(data[i]);
+      var element = window.pin.create(data[i]);
       addPinClickHandler(element, data[i]);
       documentFragment.appendChild(element);
     }
@@ -70,9 +69,8 @@
     dataCopy = data;
     map.classList.remove('map--faded');
     window.form.enable();
-    window.filter.enableFilters();
+    window.filter.enable();
     window.form.fillAddress(getPinCoords());
-    // addPinElements(data);
     updatePins();
   };
 
@@ -121,7 +119,7 @@
     closeCard();
     map.classList.add('map--faded');
     window.form.disable();
-    window.filter.disableFilters();
+    window.filter.disable();
     window.form.fillAddress(getPinCoords());
   };
 
