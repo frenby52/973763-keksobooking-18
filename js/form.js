@@ -41,6 +41,7 @@
 
   var reset = function () {
     adForm.reset();
+    window.photo.setDefault();
   };
 
   var fillAddress = function (coords) {
@@ -76,7 +77,6 @@
       price.min = 10000;
       price.placeholder = '10000';
     }
-    price.value = price.min;
   };
 
   var updateTimeInHandler = function (evt) {

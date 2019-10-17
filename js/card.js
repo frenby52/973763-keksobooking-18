@@ -123,7 +123,6 @@
     return elements;
   };
 
-
   var createCardElement = function (data) {
     var card = cardTemplate.cloneNode(true);
     var cardElementsData = getCardElementsData(data);

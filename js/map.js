@@ -109,8 +109,10 @@
   };
 
   var formSubmitHandler = function (evt) {
-    window.backend.upload(new FormData(evt.target), formUploadSuccessHandler, loadErrorHandler);
     evt.preventDefault();
+    if (evt.target.checkValidity()) {
+      window.backend.upload(new FormData(evt.target), formUploadSuccessHandler, loadErrorHandler);
+    }
   };
 
   var activateMap = function () {
