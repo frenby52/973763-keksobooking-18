@@ -2,7 +2,7 @@
 
 (function () {
   var PIN_GAP_X = 25;
-  var PIN_GAP_Y = 35;
+  var PIN_GAP_Y = 70;
   var pinTemplateId = document.querySelector('#pin');
   var pinTemplate = pinTemplateId.content.querySelector('.map__pin');
 
