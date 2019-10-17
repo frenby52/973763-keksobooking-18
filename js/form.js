@@ -11,6 +11,8 @@
   var offerTypes = document.querySelector('#type');
   var timeIn = document.querySelector('#timein');
   var timeOut = document.querySelector('#timeout');
+  var adFormSubmitButton = adForm.querySelector('.ad-form__submit');
+  var adFormResetButton = adForm.querySelector('.ad-form__reset');
 
   var roomsToGuests = {
     '1': ['1'],
@@ -23,6 +25,8 @@
     adForm.classList.add('ad-form--disabled');
     window.util.setDisabledStatusInputs(documentInputs, true);
     window.util.setDisabledStatusInputs(documentSelects, true);
+    adFormSubmitButton.disabled = true;
+    adFormResetButton.disabled = true;
   };
 
   var enable = function () {
@@ -31,6 +35,8 @@
     window.util.setDisabledStatusInputs(documentSelects, false);
     window.util.setDisabledStatusInputs(capacity, true);
     capacity.querySelector('option[selected]').disabled = false;
+    adFormSubmitButton.disabled = false;
+    adFormResetButton.disabled = false;
   };
 
   var reset = function () {
@@ -89,6 +95,10 @@
   offerTypes.addEventListener('change', updateOfferTypeToPriceHandler);
   timeIn.addEventListener('change', updateTimeOutHandler);
   timeOut.addEventListener('change', updateTimeInHandler);
+  adFormResetButton.addEventListener('click', function () {
+    reset();
+    window.map.deactivate();
+  });
 
   window.form = {
     fillAddress: fillAddress,

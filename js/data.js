@@ -34,8 +34,8 @@
         avatar: avatar
       },
       location: {
-        x: window.util.randomInteger(PIN_MIN_X, PIN_MAX_X),
-        y: window.util.randomInteger(PIN_MIN_Y, PIN_MAX_Y)
+        x: window.util.getRandomInteger(PIN_MIN_X, PIN_MAX_X),
+        y: window.util.getRandomInteger(PIN_MIN_Y, PIN_MAX_Y)
       },
       offer: {
         title: 'Заголовок',
