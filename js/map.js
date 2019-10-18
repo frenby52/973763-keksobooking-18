@@ -9,7 +9,8 @@
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
   var map = document.querySelector('.map');
-  var mapFilters = document.querySelector('.map__filters-container');
+  var mapFiltersContainer = document.querySelector('.map__filters-container');
+  var mapFilter = mapFiltersContainer.querySelector('.map__filters');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
   var card;
@@ -27,8 +28,8 @@
 
   var insertCard = function (data) {
     closeCard();
-    card = window.card.create(data);
-    map.insertBefore(card.element, mapFilters);
+    card = window.createCard(data);
+    map.insertBefore(card.element, mapFiltersContainer);
   };
 
   var addPinClickHandler = function (pin, data) {
@@ -104,7 +105,7 @@
 
   var formUploadSuccessHandler = function () {
     window.message.showSuccess();
-    window.form.reset();
+    window.photo.setDefault();
     deactivateMap();
   };
 
@@ -113,6 +114,11 @@
     if (evt.target.checkValidity()) {
       window.backend.upload(new FormData(evt.target), formUploadSuccessHandler, loadErrorHandler);
     }
+  };
+
+  var formResetClickHandler = function () {
+    window.photo.setDefault();
+    deactivateMap();
   };
 
   var activateMap = function () {
@@ -181,14 +187,18 @@
     window.util.isEnterEvent(evt, activateMap);
   };
 
+  var filterChangeHandler = window.debounce(function () {
+    updatePins();
+  });
 
   deactivateMap();
   window.form.setSubmit(formSubmitHandler);
+  window.form.setReset(formResetClickHandler);
   mapPinMain.addEventListener('mousedown', pinMainMoveMousedownHandler);
   mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
+  mapFilter.addEventListener('change', filterChangeHandler);
 
   window.map = {
-    updatePins: updatePins,
     deactivate: deactivateMap
   };
 })();

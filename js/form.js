@@ -22,6 +22,7 @@
   };
 
   var disable = function () {
+    adForm.reset();
     adForm.classList.add('ad-form--disabled');
     window.util.setDisabledStatusInputs(documentInputs, true);
     window.util.setDisabledStatusInputs(documentSelects, true);
@@ -37,11 +38,6 @@
     capacity.querySelector('option[selected]').disabled = false;
     adFormSubmitButton.disabled = false;
     adFormResetButton.disabled = false;
-  };
-
-  var reset = function () {
-    adForm.reset();
-    window.photo.setDefault();
   };
 
   var fillAddress = function (coords) {
@@ -91,20 +87,20 @@
     adForm.addEventListener('submit', formSubmitHandler);
   };
 
+  var setReset = function (formResetClickHandler) {
+    adFormResetButton.addEventListener('click', formResetClickHandler);
+  };
+
   roomNumber.addEventListener('change', updateRoomsToGuestsHandler);
   offerTypes.addEventListener('change', updateOfferTypeToPriceHandler);
   timeIn.addEventListener('change', updateTimeOutHandler);
   timeOut.addEventListener('change', updateTimeInHandler);
-  adFormResetButton.addEventListener('click', function () {
-    reset();
-    window.map.deactivate();
-  });
 
   window.form = {
     fillAddress: fillAddress,
     disable: disable,
     enable: enable,
-    reset: reset,
-    setSubmit: setSubmit
+    setSubmit: setSubmit,
+    setReset: setReset
   };
 })();

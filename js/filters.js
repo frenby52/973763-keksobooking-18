@@ -3,12 +3,11 @@
 (function () {
   var QUANTITY_FILTER = 5;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
-  var mapFilter = mapFiltersContainer.querySelector('.map__filters');
-  var housingType = document.querySelector('#housing-type');
-  var housingPrice = document.querySelector('#housing-price');
-  var housingRooms = document.querySelector('#housing-rooms');
-  var housingGuests = document.querySelector('#housing-guests');
-  var housingFeatures = document.querySelector('#housing-features');
+  var housingType = mapFiltersContainer.querySelector('#housing-type');
+  var housingPrice = mapFiltersContainer.querySelector('#housing-price');
+  var housingRooms = mapFiltersContainer.querySelector('#housing-rooms');
+  var housingGuests = mapFiltersContainer.querySelector('#housing-guests');
+  var housingFeatures = mapFiltersContainer.querySelector('#housing-features');
   var mapFiltersSelects = mapFiltersContainer.querySelectorAll('select');
   var featureInputs = housingFeatures.querySelectorAll('input');
 
@@ -64,12 +63,6 @@
     }
     return isFeatureChecked;
   };
-
-  var filterChangeHandler = window.debounce(function () {
-    window.map.updatePins();
-  });
-
-  mapFilter.addEventListener('change', filterChangeHandler);
 
   window.filter = {
     getData: getData,

@@ -3,19 +3,16 @@
 (function () {
   var cardTemplateId = document.querySelector('#card');
   var cardTemplate = cardTemplateId.content.querySelector('.popup');
-  var getOfferType = function (data) {
-    var textContent = '';
-    if (data.offer.type === 'flat') {
-      textContent = 'Квартира';
-    } else if (data.offer.type === 'bungalo') {
-      textContent = 'Бунгало';
-    } else if (data.offer.type === 'house') {
-      textContent = 'Дом';
-    } else if (data.offer.type === 'palace') {
-      textContent = 'Дворец';
-    }
 
-    return textContent;
+  var typeText = {
+    flat: 'Квартира',
+    bungalo: 'Бунгало',
+    house: 'Дом',
+    palace: 'Дворец'
+  };
+
+  var getOfferType = function (type) {
+    return typeText[type];
   };
 
   var createFeatures = function (data) {
@@ -47,30 +44,30 @@
   var getCardElementsData = function (data) {
     var elements = [
       {
-        isValid: data.offer.title !== undefined,
+        isValid: data.offer.title,
         cb: function (elem) {
           elem.textContent = data.offer.title;
         },
         elem: '.popup__title'
       },
       {
-        isValid: data.offer.address !== undefined,
+        isValid: data.offer.address,
         cb: function (elem) {
           elem.textContent = data.offer.address;
         },
         elem: '.popup__text--address'
       },
       {
-        isValid: data.offer.price !== undefined,
+        isValid: data.offer.price,
         cb: function (elem) {
           elem.textContent = data.offer.price + '₽/ночь';
         },
         elem: '.popup__text--price'
       },
       {
-        isValid: data.offer.type !== undefined,
+        isValid: data.offer.type,
         cb: function (elem) {
-          elem.textContent = getOfferType(data);
+          elem.textContent = getOfferType(data.offer.type);
         },
         elem: '.popup__type'
       },
@@ -82,14 +79,14 @@
         elem: '.popup__text--capacity'
       },
       {
-        isValid: data.offer.checkin !== undefined && data.offer.checkout !== undefined,
+        isValid: data.offer.checkin && data.offer.checkout,
         cb: function (elem) {
           elem.textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
         },
         elem: '.popup__text--time'
       },
       {
-        isValid: data.offer.features !== undefined,
+        isValid: data.offer.features,
         cb: function (elem) {
           elem.innerHTML = '';
           elem.appendChild(createFeatures(data));
@@ -97,14 +94,14 @@
         elem: '.popup__features'
       },
       {
-        isValid: data.offer.description !== undefined,
+        isValid: data.offer.description,
         cb: function (elem) {
           elem.textContent = data.offer.description;
         },
         elem: '.popup__description'
       },
       {
-        isValid: data.offer.photos !== undefined,
+        isValid: data.offer.photos,
         cb: function (elem) {
           elem.innerHTML = '';
           elem.appendChild(createPhotos(data));
@@ -112,7 +109,7 @@
         elem: '.popup__photos'
       },
       {
-        isValid: data.author.avatar !== undefined,
+        isValid: data.author.avatar,
         cb: function (elem) {
           elem.src = data.author.avatar;
         },
@@ -162,7 +159,5 @@
     };
   };
 
-  window.card = {
-    create: createCard
-  };
+  window.createCard = createCard;
 })();
