@@ -14,7 +14,6 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
   var card;
-  var dataCopy = [];
   var mapPinMainDefaultCoords = {
     x: mapPinMain.style.left,
     y: mapPinMain.style.top
@@ -32,19 +31,14 @@
     map.insertBefore(card.element, mapFiltersContainer);
   };
 
-  var addPinClickHandler = function (pin, data) {
-    pin.addEventListener('click', function () {
-      insertCard(data);
-    });
-  };
-
   var createPinElements = function (data) {
     var documentFragment = document.createDocumentFragment();
-    for (var i = 0; i < data.length; i++) {
-      var element = window.createPin(data[i]);
-      addPinClickHandler(element, data[i]);
+    data.forEach(function (info) {
+      var element = window.createPin(info, function () {
+        insertCard(info);
+      });
       documentFragment.appendChild(element);
-    }
+    });
 
     return documentFragment;
   };
@@ -66,21 +60,6 @@
     return pinCoords;
   };
 
-  var getValidData = function (data) {
-    return data.filter(function (elem) {
-      return elem.offer;
-    });
-  };
-
-  var loadSuccessHandler = function (data) {
-    dataCopy = getValidData(data);
-    map.classList.remove('map--faded');
-    window.form.enable();
-    window.filter.enable();
-    window.form.fillAddress(getPinCoords());
-    updatePins();
-  };
-
   var removePins = function () {
     var mapPinsAdded = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
     for (var i = 0; i < mapPinsAdded.length; i++) {
@@ -88,14 +67,10 @@
     }
   };
 
-  var updatePins = function () {
+  var updatePins = function (dataCopy) {
     removePins();
     closeCard();
     addPinElements(window.filter.getData(dataCopy));
-  };
-
-  var loadErrorHandler = function (error) {
-    window.message.showError(error);
   };
 
   var resetMapPinMainCoords = function () {
@@ -103,26 +78,8 @@
     mapPinMain.style.top = mapPinMainDefaultCoords.y;
   };
 
-  var formUploadSuccessHandler = function () {
-    window.message.showSuccess();
-    window.photo.setDefault();
-    deactivateMap();
-  };
-
-  var formSubmitHandler = function (evt) {
-    evt.preventDefault();
-    if (evt.target.checkValidity()) {
-      window.backend.upload(new FormData(evt.target), formUploadSuccessHandler, loadErrorHandler);
-    }
-  };
-
-  var formResetClickHandler = function () {
-    window.photo.setDefault();
-    deactivateMap();
-  };
-
   var activateMap = function () {
-    window.backend.load(loadSuccessHandler, loadErrorHandler);
+    map.classList.remove('map--faded');
   };
 
   var deactivateMap = function () {
@@ -130,16 +87,13 @@
     removePins(mapPinsAdded);
     closeCard();
     map.classList.add('map--faded');
-    window.form.disable();
-    window.filter.disable();
     resetMapPinMainCoords();
-    window.form.fillAddress(getPinCoords());
   };
 
-  var pinMainMoveMousedownHandler = function (evt) {
+  var mapPinMainMoveMousedownHandler = function (evt, cb) {
     evt.preventDefault();
     if (isMapDisabled()) {
-      activateMap();
+      cb();
     }
 
     var startCoords = {
@@ -183,22 +137,27 @@
     document.addEventListener('mouseup', mouseupHandler);
   };
 
-  var mapPinMainEnterPressHandler = function (evt) {
-    window.util.isEnterEvent(evt, activateMap);
+  var setMainPinEnterPressHandler = function (handler) {
+    mapPinMain.addEventListener('keydown', handler);
+  };
+
+  var setMapPinMainMoveMousedownHandler = function (handler) {
+    mapPinMain.addEventListener('mousedown', handler);
   };
 
   var filterChangeHandler = window.debounce(function () {
     updatePins();
   });
 
-  deactivateMap();
-  window.form.setSubmit(formSubmitHandler);
-  window.form.setReset(formResetClickHandler);
-  mapPinMain.addEventListener('mousedown', pinMainMoveMousedownHandler);
-  mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
   mapFilter.addEventListener('change', filterChangeHandler);
 
   window.map = {
-    deactivate: deactivateMap
+    activate: activateMap,
+    deactivate: deactivateMap,
+    getPinCoords: getPinCoords,
+    updatePins: updatePins,
+    setMainPinEnterPressHandler: setMainPinEnterPressHandler,
+    setMapPinMainMoveMousedownHandler: setMapPinMainMoveMousedownHandler,
+    mapPinMainMoveMousedownHandler: mapPinMainMoveMousedownHandler
   };
 })();

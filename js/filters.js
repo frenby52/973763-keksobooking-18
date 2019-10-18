@@ -64,9 +64,17 @@
     return isFeatureChecked;
   };
 
+  var getValidData = function (data) {
+    return data.filter(function (elem) {
+      return elem.offer;
+    });
+  };
+
+
   window.filter = {
     getData: getData,
     disable: disableFilters,
-    enable: enableFilters
+    enable: enableFilters,
+    getValidData: getValidData
   };
 })();
