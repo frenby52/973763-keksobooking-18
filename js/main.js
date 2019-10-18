@@ -46,6 +46,10 @@
     deactivatePage();
   };
 
+  var filterChangeHandler = window.debounce(function () {
+    window.map.updatePins(dataCopy);
+  });
+
   deactivatePage();
   window.form.setSubmit(formSubmitHandler);
   window.form.setReset(formResetClickHandler);
@@ -56,4 +60,6 @@
   window.map.setMapPinMainMoveMousedownHandler(function (evt) {
     window.map.mapPinMainMoveMousedownHandler(evt, activatePage);
   });
+
+  window.filter.setFilterChangeHandler(filterChangeHandler);
 })();

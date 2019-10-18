@@ -3,6 +3,7 @@
 (function () {
   var QUANTITY_FILTER = 5;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
+  var mapFilter = mapFiltersContainer.querySelector('.map__filters');
   var housingType = mapFiltersContainer.querySelector('#housing-type');
   var housingPrice = mapFiltersContainer.querySelector('#housing-price');
   var housingRooms = mapFiltersContainer.querySelector('#housing-rooms');
@@ -70,11 +71,15 @@
     });
   };
 
+  var setFilterChangeHandler = function (handler) {
+    mapFilter.addEventListener('change', handler);
+  };
 
   window.filter = {
     getData: getData,
     disable: disableFilters,
     enable: enableFilters,
-    getValidData: getValidData
+    getValidData: getValidData,
+    setFilterChangeHandler: setFilterChangeHandler
   };
 })();

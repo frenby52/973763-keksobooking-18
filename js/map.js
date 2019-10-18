@@ -10,7 +10,6 @@
   var PIN_MAX_Y = 630;
   var map = document.querySelector('.map');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
-  var mapFilter = mapFiltersContainer.querySelector('.map__filters');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
   var card;
@@ -144,12 +143,6 @@
   var setMapPinMainMoveMousedownHandler = function (handler) {
     mapPinMain.addEventListener('mousedown', handler);
   };
-
-  var filterChangeHandler = window.debounce(function () {
-    updatePins();
-  });
-
-  mapFilter.addEventListener('change', filterChangeHandler);
 
   window.map = {
     activate: activateMap,
