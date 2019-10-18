@@ -41,7 +41,7 @@
   var createPinElements = function (data) {
     var documentFragment = document.createDocumentFragment();
     for (var i = 0; i < data.length; i++) {
-      var element = window.pin.create(data[i]);
+      var element = window.createPin(data[i]);
       addPinClickHandler(element, data[i]);
       documentFragment.appendChild(element);
     }
@@ -81,21 +81,21 @@
     updatePins();
   };
 
-  var updatePins = function () {
+  var removePins = function () {
     var mapPinsAdded = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
-    removePins(mapPinsAdded);
+    for (var i = 0; i < mapPinsAdded.length; i++) {
+      mapPinsAdded[i].remove();
+    }
+  };
+
+  var updatePins = function () {
+    removePins();
     closeCard();
     addPinElements(window.filter.getData(dataCopy));
   };
 
   var loadErrorHandler = function (error) {
     window.message.showError(error);
-  };
-
-  var removePins = function (pins) {
-    for (var i = 0; i < pins.length; i++) {
-      pins[i].remove();
-    }
   };
 
   var resetMapPinMainCoords = function () {

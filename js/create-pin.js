@@ -3,8 +3,7 @@
 (function () {
   var PIN_GAP_X = 25;
   var PIN_GAP_Y = 70;
-  var pinTemplateId = document.querySelector('#pin');
-  var pinTemplate = pinTemplateId.content.querySelector('.map__pin');
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var createPin = function (data) {
     var element = pinTemplate.cloneNode(true);
@@ -16,7 +15,5 @@
     return element;
   };
 
-  window.pin = {
-    create: createPin
-  };
+  window.createPin = createPin;
 })();

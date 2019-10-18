@@ -2,10 +2,9 @@
 
 (function () {
   var main = document.querySelector('main');
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
   var showError = function (error) {
-    var errorTemplateId = document.querySelector('#error');
-    var errorTemplate = errorTemplateId.content.querySelector('.error');
     var errorElement = errorTemplate.cloneNode(true);
     var errorMessage = errorElement.querySelector('.error__message');
     errorMessage.innerHTML = errorMessage.textContent + '<br>' + error;

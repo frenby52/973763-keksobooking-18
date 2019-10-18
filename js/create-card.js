@@ -1,8 +1,7 @@
 'use strict';
 
 (function () {
-  var cardTemplateId = document.querySelector('#card');
-  var cardTemplate = cardTemplateId.content.querySelector('.popup');
+  var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 
   var typeText = {
     flat: 'Квартира',
