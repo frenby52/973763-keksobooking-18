@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-
-  var dataCopy = [];
-
   var activatePage = function () {
     window.backend.load(loadSuccessHandler, loadErrorHandler);
   };
@@ -16,12 +13,13 @@
   };
 
   var loadSuccessHandler = function (data) {
-    dataCopy = window.filter.getValidData(data);
     window.map.activate();
     window.form.enable();
     window.filter.enable();
+    window.filter.setFilterChangeCallback(data, function (filteredData) {
+      window.map.updatePins(filteredData);
+    });
     window.form.fillAddress(window.map.getPinCoords());
-    window.map.updatePins(dataCopy);
   };
 
   var loadErrorHandler = function (error) {
@@ -30,7 +28,7 @@
 
   var formUploadSuccessHandler = function () {
     window.message.showSuccess();
-    window.photo.setDefault();
+    window.resetPics();
     deactivatePage();
   };
 
@@ -42,13 +40,9 @@
   };
 
   var formResetClickHandler = function () {
-    window.photo.setDefault();
+    window.resetPics();
     deactivatePage();
   };
-
-  var filterChangeHandler = window.debounce(function () {
-    window.map.updatePins(dataCopy);
-  });
 
   deactivatePage();
   window.form.setSubmit(formSubmitHandler);
@@ -57,6 +51,4 @@
   window.map.setPinMainMoveCallback(function () {
     window.form.fillAddress(window.map.getPinCoords());
   });
-
-  window.filter.setFilterChangeHandler(filterChangeHandler);
 })();

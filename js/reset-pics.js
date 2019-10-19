@@ -57,7 +57,7 @@
     photoContainer.appendChild(previewBlock);
   };
 
-  var setDefaultPics = function () {
+  var resetPics = function () {
     var photoPreviews = document.querySelectorAll('.ad-form__photo:not(.visually-hidden)');
 
     photoPreviews.forEach(function (photo) {
@@ -82,7 +82,5 @@
   photoUpload.addEventListener('change', photoUploadChangeHandler);
   avatarUpload.addEventListener('change', avatarUploadChangeHandler);
 
-  window.photo = {
-    setDefault: setDefaultPics
-  };
+  window.resetPics = resetPics;
 })();

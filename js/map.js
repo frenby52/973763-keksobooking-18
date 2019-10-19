@@ -13,6 +13,8 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
   var card;
+  var pinMainPressCallback;
+  var pinMainMoveCallback;
   var mapPinMainDefaultCoords = {
     x: mapPinMain.style.left,
     y: mapPinMain.style.top
@@ -66,10 +68,10 @@
     }
   };
 
-  var updatePins = function (dataCopy) {
+  var updatePins = function (data) {
     removePins();
     closeCard();
-    addPinElements(window.filter.getData(dataCopy));
+    addPinElements(data);
   };
 
   var resetMapPinMainCoords = function () {
@@ -138,9 +140,6 @@
     document.addEventListener('mousemove', mousemoveHandler);
     document.addEventListener('mouseup', mouseupHandler);
   };
-
-  var pinMainPressCallback;
-  var pinMainMoveCallback;
 
   var mapPinMainEnterPressHandler = function (evt) {
     if (pinMainPressCallback) {

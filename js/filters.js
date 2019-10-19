@@ -11,8 +11,10 @@
   var housingFeatures = mapFiltersContainer.querySelector('#housing-features');
   var mapFiltersSelects = mapFiltersContainer.querySelectorAll('select');
   var featureInputs = Array.from(housingFeatures.querySelectorAll('input'));
+  var changeFilterCallback;
 
   var disableFilters = function () {
+    mapFilter.reset();
     window.util.setDisabledStatusInputs(mapFiltersSelects, true);
     window.util.setDisabledStatusInputs(featureInputs, true);
   };
@@ -77,15 +79,23 @@
     });
   };
 
-  var setFilterChangeHandler = function (handler) {
-    mapFilter.addEventListener('change', handler);
+  var setFilterChangeCallback = function (data, callback) {
+    changeFilterCallback = window.debounce(function () {
+      var filteredData = getValidData(getData(data));
+      callback(filteredData);
+    });
+    changeFilterCallback();
   };
+
+  mapFilter.addEventListener('change', function () {
+    changeFilterCallback();
+  });
 
   window.filter = {
     getData: getData,
     disable: disableFilters,
     enable: enableFilters,
     getValidData: getValidData,
-    setFilterChangeHandler: setFilterChangeHandler
+    setFilterChangeCallback: setFilterChangeCallback
   };
 })();
