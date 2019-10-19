@@ -10,7 +10,7 @@
   var housingGuests = mapFiltersContainer.querySelector('#housing-guests');
   var housingFeatures = mapFiltersContainer.querySelector('#housing-features');
   var mapFiltersSelects = mapFiltersContainer.querySelectorAll('select');
-  var featureInputs = housingFeatures.querySelectorAll('input');
+  var featureInputs = Array.from(housingFeatures.querySelectorAll('input'));
 
   var disableFilters = function () {
     window.util.setDisabledStatusInputs(mapFiltersSelects, true);
@@ -22,10 +22,25 @@
     window.util.setDisabledStatusInputs(featureInputs, false);
   };
 
-  var getData = function (dataCopy) {
-    return dataCopy.filter(function (elem) {
-      return getSameOfferTypeData(elem) && getDataByOfferPrice(elem) && getDataByOfferRooms(elem) && getDataByOfferGuests(elem) && getDataByOfferFeature(elem, 0) && getDataByOfferFeature(elem, 1) && getDataByOfferFeature(elem, 2) && getDataByOfferFeature(elem, 3) && getDataByOfferFeature(elem, 4) && getDataByOfferFeature(elem, 5);
+  var getData = function (data) {
+    var selectedFeatures = featureInputs.filter(function (input) {
+      return input.checked;
+    })
+      .map(function (input) {
+        return input.value;
+      });
+    return data.filter(function (elem) {
+      return getSameOfferTypeData(elem) && getDataByOfferPrice(elem) && getDataByOfferRooms(elem) && getDataByOfferGuests(elem) && getDataByOfferFeature(elem, selectedFeatures);
     }).slice(0, QUANTITY_FILTER);
+  };
+
+  var getDataByOfferFeature = function (elem, selectedFeatures) {
+    if (!selectedFeatures.length) {
+      return true;
+    }
+    return selectedFeatures.every(function (feature) {
+      return elem.offer.features.includes(feature);
+    });
   };
 
   var getSameOfferTypeData = function (elem) {
@@ -54,15 +69,6 @@
 
   var getDataByOfferGuests = function (elem) {
     return housingGuests.value === 'any' || elem.offer.guests === parseInt(housingGuests.value, 10);
-  };
-
-  var getDataByOfferFeature = function (elem, i) {
-    var isFeatureChecked = true;
-    if (featureInputs[i].checked) {
-      isFeatureChecked = false;
-      return elem.offer.features.indexOf(featureInputs[i].value) >= 0;
-    }
-    return isFeatureChecked;
   };
 
   var getValidData = function (data) {

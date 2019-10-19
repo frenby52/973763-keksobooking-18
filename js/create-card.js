@@ -2,6 +2,7 @@
 
 (function () {
   var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
+  var elements = [];
 
   var typeText = {
     flat: 'Квартира',
@@ -41,7 +42,7 @@
   };
 
   var getCardElementsData = function (data) {
-    var elements = [
+    elements = [
       {
         isValid: data.offer.title,
         cb: function (elem) {
