@@ -53,12 +53,9 @@
   deactivatePage();
   window.form.setSubmit(formSubmitHandler);
   window.form.setReset(formResetClickHandler);
-  window.map.setMainPinEnterPressHandler(function (evt) {
-    window.util.isEnterEvent(evt, activatePage);
-  });
-
-  window.map.setMapPinMainMoveMousedownHandler(function (evt) {
-    window.map.mapPinMainMoveMousedownHandler(evt, activatePage);
+  window.map.setPinMainPressCallback(activatePage);
+  window.map.setPinMainMoveCallback(function () {
+    window.form.fillAddress(window.map.getPinCoords());
   });
 
   window.filter.setFilterChangeHandler(filterChangeHandler);

@@ -89,10 +89,10 @@
     resetMapPinMainCoords();
   };
 
-  var mapPinMainMoveMousedownHandler = function (evt, cb) {
+  var mapPinMainMoveMousedownHandler = function (evt) {
     evt.preventDefault();
-    if (isMapDisabled()) {
-      cb();
+    if (isMapDisabled() && pinMainPressCallback) {
+      pinMainPressCallback();
     }
 
     var startCoords = {
@@ -124,6 +124,9 @@
         mapPinMain.style.left = currentX + 'px';
       }
       window.form.fillAddress(getPinCoords());
+      if (pinMainMoveCallback) {
+        pinMainMoveCallback();
+      }
     };
 
     var mouseupHandler = function (upEvt) {
@@ -136,21 +139,28 @@
     document.addEventListener('mouseup', mouseupHandler);
   };
 
-  var setMainPinEnterPressHandler = function (handler) {
-    mapPinMain.addEventListener('keydown', handler);
+  var pinMainPressCallback;
+  var pinMainMoveCallback;
+
+  var mapPinMainEnterPressHandler = function (evt) {
+    if (pinMainPressCallback) {
+      window.util.isEnterEvent(evt, pinMainPressCallback);
+    }
   };
 
-  var setMapPinMainMoveMousedownHandler = function (handler) {
-    mapPinMain.addEventListener('mousedown', handler);
-  };
+  mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
+  mapPinMain.addEventListener('mousedown', mapPinMainMoveMousedownHandler);
 
   window.map = {
     activate: activateMap,
     deactivate: deactivateMap,
     getPinCoords: getPinCoords,
     updatePins: updatePins,
-    setMainPinEnterPressHandler: setMainPinEnterPressHandler,
-    setMapPinMainMoveMousedownHandler: setMapPinMainMoveMousedownHandler,
-    mapPinMainMoveMousedownHandler: mapPinMainMoveMousedownHandler
+    setPinMainPressCallback: function (callback) {
+      pinMainPressCallback = callback;
+    },
+    setPinMainMoveCallback: function (callback) {
+      pinMainMoveCallback = callback;
+    }
   };
 })();
