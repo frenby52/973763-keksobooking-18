@@ -12,8 +12,9 @@
     element.querySelector('img').src = data.author.avatar;
     element.querySelector('img').alt = data.offer.title;
 
-    element.addEventListener('click', function () {
+    element.addEventListener('click', function (evt) {
       cb(data);
+      evt.currentTarget.classList.add('map__pin--active');
     });
 
     return element;

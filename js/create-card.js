@@ -135,12 +135,13 @@
     return card;
   };
 
-  var createCard = function (data) {
+  var createCard = function (data, cb) {
     var cardElement = createCardElement(data);
     var popupClose = cardElement.querySelector('.popup__close');
     var closeCard = function () {
       cardElement.remove();
       document.removeEventListener('keydown', cardEscPressHandler);
+      cb();
     };
 
     var cardEscPressHandler = function (evt) {

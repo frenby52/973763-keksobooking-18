@@ -3,6 +3,7 @@
 (function () {
   var main = document.querySelector('main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
   var showError = function (error) {
     var errorElement = errorTemplate.cloneNode(true);
@@ -27,8 +28,6 @@
   };
 
   var showSuccess = function () {
-    var successTemplateId = document.querySelector('#success');
-    var successTemplate = successTemplateId.content.querySelector('.success');
     var successMessage = successTemplate.cloneNode(true);
 
     var closeSuccessMessage = function () {

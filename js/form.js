@@ -44,7 +44,7 @@
     addressInput.value = coords.x + ', ' + coords.y;
   };
 
-  var updateRoomsToGuestsHandler = function (evt) {
+  var roomNumberChangeHandler = function (evt) {
     var roomsNumber = evt.target.value;
     var guestsNumberAvailable = roomsToGuests[roomsNumber];
     for (var i = 0; i < capacity.options.length; i++) {
@@ -58,7 +58,7 @@
     }
   };
 
-  var updateOfferTypeToPriceHandler = function (evt) {
+  var offerTypesChangeHandler = function (evt) {
     var offerType = evt.target.value;
     if (offerType === 'bungalo') {
       price.min = 0;
@@ -75,11 +75,11 @@
     }
   };
 
-  var updateTimeInHandler = function (evt) {
+  var timeOutChangeHandler = function (evt) {
     timeIn.value = evt.target.value;
   };
 
-  var updateTimeOutHandler = function (evt) {
+  var timeInChangeHandler = function (evt) {
     timeOut.value = evt.target.value;
   };
 
@@ -91,10 +91,10 @@
     adFormResetButton.addEventListener('click', formResetClickHandler);
   };
 
-  roomNumber.addEventListener('change', updateRoomsToGuestsHandler);
-  offerTypes.addEventListener('change', updateOfferTypeToPriceHandler);
-  timeIn.addEventListener('change', updateTimeOutHandler);
-  timeOut.addEventListener('change', updateTimeInHandler);
+  roomNumber.addEventListener('change', roomNumberChangeHandler);
+  offerTypes.addEventListener('change', offerTypesChangeHandler);
+  timeIn.addEventListener('change', timeInChangeHandler);
+  timeOut.addEventListener('change', timeOutChangeHandler);
 
   window.form = {
     fillAddress: fillAddress,
