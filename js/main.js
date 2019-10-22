@@ -9,6 +9,7 @@
     window.map.deactivate();
     window.form.disable();
     window.filter.disable();
+    window.resetPics();
     window.form.fillAddress(window.map.getPinCoords());
   };
 
@@ -28,7 +29,6 @@
 
   var formUploadSuccessHandler = function () {
     window.message.showSuccess();
-    window.resetPics();
     deactivatePage();
   };
 
@@ -40,7 +40,6 @@
   };
 
   var formResetClickHandler = function () {
-    window.resetPics();
     deactivatePage();
   };
 

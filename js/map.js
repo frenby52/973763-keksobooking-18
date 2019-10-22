@@ -22,20 +22,12 @@
   var closeCard = function () {
     if (card) {
       card.close();
-      removeActivePin();
     }
   };
 
-  var removeActivePin = function () {
-    var pinSelected = mapPins.querySelector('.map__pin--active');
-    if (pinSelected) {
-      pinSelected.classList.remove('map__pin--active');
-    }
-  };
-
-  var insertCard = function (data) {
+  var insertCard = function (data, callback) {
     closeCard();
-    card = window.createCard(data, removeActivePin);
+    card = window.createCard(data, callback);
     map.appendChild(card.element);
   };
 
@@ -43,8 +35,9 @@
     var documentFragment = document.createDocumentFragment();
     data.forEach(function (info) {
       var element = window.createPin(info, function () {
-        insertCard(info);
-        removeActivePin();
+        insertCard(info, function () {
+          element.classList.remove('map__pin--active');
+        });
       });
       documentFragment.appendChild(element);
     });
