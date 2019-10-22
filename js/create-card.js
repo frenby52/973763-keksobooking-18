@@ -135,7 +135,7 @@
     return card;
   };
 
-  var createCard = function (data, cb) {
+  window.createCard = function (data, cb) {
     var cardElement = createCardElement(data);
     var popupClose = cardElement.querySelector('.popup__close');
     var closeCard = function () {
@@ -159,6 +159,4 @@
       close: closeCard
     };
   };
-
-  window.createCard = createCard;
 })();
