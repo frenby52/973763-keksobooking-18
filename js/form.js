@@ -22,6 +22,7 @@
   };
 
   var disable = function () {
+    adForm.reset();
     adForm.classList.add('ad-form--disabled');
     window.util.setDisabledStatusInputs(documentInputs, true);
     window.util.setDisabledStatusInputs(documentSelects, true);
@@ -39,15 +40,11 @@
     adFormResetButton.disabled = false;
   };
 
-  var reset = function () {
-    adForm.reset();
-  };
-
   var fillAddress = function (coords) {
     addressInput.value = coords.x + ', ' + coords.y;
   };
 
-  var updateRoomsToGuestsHandler = function (evt) {
+  var roomNumberChangeHandler = function (evt) {
     var roomsNumber = evt.target.value;
     var guestsNumberAvailable = roomsToGuests[roomsNumber];
     for (var i = 0; i < capacity.options.length; i++) {
@@ -61,7 +58,7 @@
     }
   };
 
-  var updateOfferTypeToPriceHandler = function (evt) {
+  var offerTypesChangeHandler = function (evt) {
     var offerType = evt.target.value;
     if (offerType === 'bungalo') {
       price.min = 0;
@@ -76,14 +73,13 @@
       price.min = 10000;
       price.placeholder = '10000';
     }
-    price.value = price.min;
   };
 
-  var updateTimeInHandler = function (evt) {
+  var timeOutChangeHandler = function (evt) {
     timeIn.value = evt.target.value;
   };
 
-  var updateTimeOutHandler = function (evt) {
+  var timeInChangeHandler = function (evt) {
     timeOut.value = evt.target.value;
   };
 
@@ -91,20 +87,20 @@
     adForm.addEventListener('submit', formSubmitHandler);
   };
 
-  roomNumber.addEventListener('change', updateRoomsToGuestsHandler);
-  offerTypes.addEventListener('change', updateOfferTypeToPriceHandler);
-  timeIn.addEventListener('change', updateTimeOutHandler);
-  timeOut.addEventListener('change', updateTimeInHandler);
-  adFormResetButton.addEventListener('click', function () {
-    reset();
-    window.map.deactivate();
-  });
+  var setReset = function (formResetClickHandler) {
+    adFormResetButton.addEventListener('click', formResetClickHandler);
+  };
+
+  roomNumber.addEventListener('change', roomNumberChangeHandler);
+  offerTypes.addEventListener('change', offerTypesChangeHandler);
+  timeIn.addEventListener('change', timeInChangeHandler);
+  timeOut.addEventListener('change', timeOutChangeHandler);
 
   window.form = {
     fillAddress: fillAddress,
     disable: disable,
     enable: enable,
-    reset: reset,
-    setSubmit: setSubmit
+    setSubmit: setSubmit,
+    setReset: setReset
   };
 })();

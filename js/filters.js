@@ -4,15 +4,17 @@
   var QUANTITY_FILTER = 5;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   var mapFilter = mapFiltersContainer.querySelector('.map__filters');
-  var housingType = document.querySelector('#housing-type');
-  var housingPrice = document.querySelector('#housing-price');
-  var housingRooms = document.querySelector('#housing-rooms');
-  var housingGuests = document.querySelector('#housing-guests');
-  var housingFeatures = document.querySelector('#housing-features');
+  var housingType = mapFiltersContainer.querySelector('#housing-type');
+  var housingPrice = mapFiltersContainer.querySelector('#housing-price');
+  var housingRooms = mapFiltersContainer.querySelector('#housing-rooms');
+  var housingGuests = mapFiltersContainer.querySelector('#housing-guests');
+  var housingFeatures = mapFiltersContainer.querySelector('#housing-features');
   var mapFiltersSelects = mapFiltersContainer.querySelectorAll('select');
-  var featureInputs = housingFeatures.querySelectorAll('input');
+  var featureInputs = Array.from(housingFeatures.querySelectorAll('input'));
+  var changeFilterCallback;
 
   var disableFilters = function () {
+    mapFilter.reset();
     window.util.setDisabledStatusInputs(mapFiltersSelects, true);
     window.util.setDisabledStatusInputs(featureInputs, true);
   };
@@ -22,10 +24,25 @@
     window.util.setDisabledStatusInputs(featureInputs, false);
   };
 
-  var getData = function (dataCopy) {
-    return dataCopy.filter(function (elem) {
-      return getSameOfferTypeData(elem) && getDataByOfferPrice(elem) && getDataByOfferRooms(elem) && getDataByOfferGuests(elem) && getDataByOfferFeature(elem, 0) && getDataByOfferFeature(elem, 1) && getDataByOfferFeature(elem, 2) && getDataByOfferFeature(elem, 3) && getDataByOfferFeature(elem, 4) && getDataByOfferFeature(elem, 5);
+  var getData = function (data) {
+    var selectedFeatures = featureInputs.filter(function (input) {
+      return input.checked;
+    })
+      .map(function (input) {
+        return input.value;
+      });
+    return data.filter(function (elem) {
+      return getSameOfferTypeData(elem) && getDataByOfferPrice(elem) && getDataByOfferRooms(elem) && getDataByOfferGuests(elem) && getDataByOfferFeature(elem, selectedFeatures);
     }).slice(0, QUANTITY_FILTER);
+  };
+
+  var getDataByOfferFeature = function (elem, selectedFeatures) {
+    if (!selectedFeatures.length) {
+      return true;
+    }
+    return selectedFeatures.every(function (feature) {
+      return elem.offer.features.includes(feature);
+    });
   };
 
   var getSameOfferTypeData = function (elem) {
@@ -56,24 +73,29 @@
     return housingGuests.value === 'any' || elem.offer.guests === parseInt(housingGuests.value, 10);
   };
 
-  var getDataByOfferFeature = function (elem, i) {
-    var isFeatureChecked = true;
-    if (featureInputs[i].checked) {
-      isFeatureChecked = false;
-      return elem.offer.features.indexOf(featureInputs[i].value) >= 0;
-    }
-    return isFeatureChecked;
+  var getValidData = function (data) {
+    return data.filter(function (elem) {
+      return elem.offer;
+    });
   };
 
-  var filterChangeHandler = window.debounce(function () {
-    window.map.updatePins();
-  });
+  var setFilterChangeCallback = function (data, callback) {
+    changeFilterCallback = window.debounce(function () {
+      var filteredData = getValidData(getData(data));
+      callback(filteredData);
+    });
+    changeFilterCallback();
+  };
 
-  mapFilter.addEventListener('change', filterChangeHandler);
+  mapFilter.addEventListener('change', function () {
+    changeFilterCallback();
+  });
 
   window.filter = {
     getData: getData,
     disable: disableFilters,
-    enable: enableFilters
+    enable: enableFilters,
+    getValidData: getValidData,
+    setFilterChangeCallback: setFilterChangeCallback
   };
 })();

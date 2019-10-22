@@ -10,6 +10,7 @@
   var photoUpload = photoContainer.querySelector('.ad-form__upload input[type=file]');
   var photoPreview = photoContainer.querySelector('.ad-form__photo');
   var photosLabel = photoContainer.querySelector('.ad-form__drop-zone');
+  var avatarPreviewDefaultSrc = avatarPreview.src;
 
   var showUploadMessage = function (label, message) {
     label.innerHTML = message;
@@ -56,6 +57,16 @@
     photoContainer.appendChild(previewBlock);
   };
 
+  var resetPics = function () {
+    var photoPreviews = document.querySelectorAll('.ad-form__photo:not(.visually-hidden)');
+
+    photoPreviews.forEach(function (photo) {
+      photo.remove();
+    });
+    photoContainer.appendChild(photoPreview);
+    avatarPreview.src = avatarPreviewDefaultSrc;
+  };
+
   var addAvatarSrc = function (reader) {
     avatarPreview.src = reader.result;
   };
@@ -70,4 +81,6 @@
 
   photoUpload.addEventListener('change', photoUploadChangeHandler);
   avatarUpload.addEventListener('change', avatarUploadChangeHandler);
+
+  window.resetPics = resetPics;
 })();
